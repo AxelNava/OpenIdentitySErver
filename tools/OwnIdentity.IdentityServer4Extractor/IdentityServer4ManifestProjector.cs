@@ -27,8 +27,12 @@ internal static class IdentityServer4ManifestProjector
         WriteIndented = true
     };
 
-    internal static ProjectedManifest Project(IdentityServer4SourceSnapshot source)
+    internal static ProjectedManifest Project(IdentityServer4SourceSnapshot source, SchemaBaselineMatch? baseline = null)
     {
+        baseline ??= new SchemaBaselineMatch(IdentityServer4SchemaBaseline.BaselineName, []);
+        var configurationTables = IdentityServer4SchemaBaseline.ConfigurationTableNames(baseline);
+        var quarantinedTables = baseline.QuarantinedTables;
+
         var clients = source.Clients
             .OrderBy(client => client.ClientId, StringComparer.Ordinal)
             .Select(ProjectClient)
@@ -48,11 +52,7 @@ internal static class IdentityServer4ManifestProjector
         var manifest = new LegacyInventoryManifest
         {
             SchemaVersion = 1,
-            LegacyTables = IdentityServer4SchemaBaseline.ExpectedColumns
-                .Select(column => column.TableName)
-                .Where(table => table != "__EFMigrationsHistory")
-                .Distinct(StringComparer.Ordinal)
-                .Order(StringComparer.Ordinal)
+            LegacyTables = configurationTables
                 .Select(table => (DispositionItem?)new DispositionItem
                 {
                     Name = table,
@@ -61,7 +61,14 @@ internal static class IdentityServer4ManifestProjector
                         : "transform"
                 })
                 .ToList(),
-            CustomExtensions = [],
+            CustomExtensions = quarantinedTables
+                .Order(StringComparer.Ordinal)
+                .Select(table => (DispositionItem?)new DispositionItem
+                {
+                    Name = table,
+                    Disposition = "quarantine"
+                })
+                .ToList(),
             Credentials = source.Credentials
                 .OrderBy(credential => credential.SourceKind, StringComparer.Ordinal)
                 .ThenBy(credential => credential.Id)
@@ -82,11 +89,17 @@ internal static class IdentityServer4ManifestProjector
                     Id = "ADR-source-extraction-operator-cli",
                     Status = "resolved"
                 },
-                new AdrInventoryItem
-                {
-                    Id = "ADR-source-baseline-sqlserver-identityserver4-ef-4.1",
-                    Status = "resolved"
-                }
+                baseline.BaselineName == IdentityServer4SchemaBaseline.SkorubaBeta7BaselineName
+                    ? new AdrInventoryItem
+                    {
+                        Id = "ADR-source-baseline-skoruba-identityserver4-admin-1.0.0-beta7",
+                        Status = "resolved"
+                    }
+                    : new AdrInventoryItem
+                    {
+                        Id = "ADR-source-baseline-sqlserver-identityserver4-ef-4.1",
+                        Status = "resolved"
+                    }
             ]
         };
 

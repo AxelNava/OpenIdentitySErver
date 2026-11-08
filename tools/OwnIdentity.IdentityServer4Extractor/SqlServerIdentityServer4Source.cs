@@ -42,14 +42,14 @@ internal sealed class SqlServerIdentityServer4Source(string connectionString) : 
         await connection.OpenAsync(cancellationToken);
 
         var columns = await ReadColumnsAsync(connection, cancellationToken);
-        IdentityServer4SchemaBaseline.ValidateStructure(columns);
+        var baseline = IdentityServer4SchemaBaseline.TryMatch(columns);
 
         var migrations = await ReadMigrationsAsync(connection, cancellationToken);
-        IdentityServer4SchemaBaseline.ValidateMigrations(migrations);
+        IdentityServer4SchemaBaseline.ValidateMigrations(baseline, migrations);
 
         var clients = await ReadClientsAsync(connection, cancellationToken);
-        var credentials = await ReadCredentialsAsync(connection, cancellationToken);
-        return new IdentityServer4SourceSnapshot(clients, credentials);
+        var credentials = await ReadCredentialsAsync(connection, baseline, cancellationToken);
+        return new IdentityServer4SourceSnapshot(clients, credentials, baseline);
     }
 
     private static async Task<IReadOnlyList<SourceColumn>> ReadColumnsAsync(
@@ -115,10 +115,11 @@ internal sealed class SqlServerIdentityServer4Source(string connectionString) : 
 
     private static async Task<IReadOnlyList<SourceCredential>> ReadCredentialsAsync(
         SqlConnection connection,
+        SchemaBaselineMatch baseline,
         CancellationToken cancellationToken)
     {
         var credentials = new List<SourceCredential>();
-        await using var command = CreateCommand(connection, CredentialsSql);
+        await using var command = CreateCommand(connection, IdentityServer4SchemaBaseline.CredentialsSqlFor(baseline));
         await using var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken);
         while (await reader.ReadAsync(cancellationToken))
         {

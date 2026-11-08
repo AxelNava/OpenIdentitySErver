@@ -49,7 +49,7 @@ internal static class IdentityServer4ExtractorCli
         {
             var source = sourceFactory(connectionString);
             var snapshot = await source.ReadAsync(cancellationToken);
-            var projected = IdentityServer4ManifestProjector.Project(snapshot);
+            var projected = IdentityServer4ManifestProjector.Project(snapshot, snapshot.Baseline);
             await output.WriteLineAsync(projected.Json);
 
             if (!projected.Validation.IsValid)
@@ -62,7 +62,9 @@ internal static class IdentityServer4ExtractorCli
         }
         catch (UnsupportedSourceSchemaException)
         {
-            await error.WriteLineAsync($"ERROR EXT101: Source schema does not exactly match {IdentityServer4SchemaBaseline.BaselineName}.");
+            await error.WriteLineAsync(
+                $"ERROR EXT101: Source schema does not exactly match {IdentityServer4SchemaBaseline.BaselineName} "
+                + $"or {IdentityServer4SchemaBaseline.SkorubaBeta7BaselineName}.");
             return 2;
         }
         catch (ManifestTooLargeException)
