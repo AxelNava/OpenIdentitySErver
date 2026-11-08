@@ -1,7 +1,7 @@
 # ADR 0003: SAML directions and product
 
-Status: Proposed
-Related: plan section 12.3; section 4.3 (SAML 2.0 bridging)
+Status: Accepted (2026-11-08, adjusted by operator — no SAML product now)
+Related: plan section 12.3; section 4.3 (SAML 2.0 bridging); section 4.4 (database-driven external authentication providers)
 
 ## Context
 
@@ -21,7 +21,19 @@ capability when only inbound is required is waste.
 Start with option 1 (inbound) if no outbound SP is named today; record each partner/SP with
 its SLO requirements before choosing 2 or 3.
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
+
+"Por ahora no conozco" — **no SAML product is selected or built now**. Clarification the
+operator raised: partners authenticating with their **Microsoft / Entra ID (Azure AD) account**
+at our login page is **OIDC federation, not SAML** — we act as the OIDC relying party of their
+IdP, receive their id/access tokens, authenticate the user locally, and issue our own tokens.
+That flow belongs to section 4.4 (database-driven external authentication providers), not to
+this ADR. This ADR activates only when a partner IdP or SP actually speaks SAML.
+
+If/when the first SAML partner appears: inbound-only bridge (Sustainsys.Saml2, option 1) is the
+pre-selected default; each partner's SLO requirements are recorded before onboarding.
+
+## Consequences (of the decision)
 
 - One authentication scheme per inbound IdP per Sustainsys guidance.
 - SLO semantics (IdP-initiated logout) documented per partner before onboarding.

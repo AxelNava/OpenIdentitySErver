@@ -1,6 +1,6 @@
 # ADR 0010: Audit and privacy
 
-Status: Proposed
+Status: Accepted (2026-11-08)
 Related: plan section 12.10; section 9 (observability, SLOs, audit); section 7 (threat model)
 
 ## Context
@@ -21,8 +21,13 @@ Option 1 initially, with PII classification and redaction rules from the extract
 (no secrets/PII in manifests), plus a defined export path so migrating to 2/3 later is
 mechanical.
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
 
-- Retention periods and legal-hold workflow need operator values before go-live.
-- Operator access to audit data is role-gated and itself audited.
-- Deletion requests honor regional rules recorded here.
+"Guardamos la auditoría, y si se requiere exportar se exporta... hasta 7 años" — **Option 1
+accepted**: append-only in-platform audit sink with a defined export path for a future SIEM;
+**retention: 7 years**. Legal hold and regional deletion rules recorded when a jurisdiction
+demands them.
+
+## Consequences (of the decision)
+
+- Retention period: 7 years, enforced by retention policy with tests.

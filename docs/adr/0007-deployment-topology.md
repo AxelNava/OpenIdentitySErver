@@ -1,6 +1,6 @@
 # ADR 0007: Deployment topology
 
-Status: Proposed
+Status: Accepted (2026-11-08)
 Related: plan section 12.7; sections 3 (trust boundaries), 9 (observability)
 
 ## Context
@@ -21,8 +21,17 @@ active-active constraints.
 Option 2 as target (cells behind a trusted edge, per-cell state stores); start with a
 single cell and grow. mTLS termination at the edge, issuer cells stateless.
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
 
-- Session/cache/pub-sub become required platform services (cell-scoped).
-- Bridge (SAML) runs isolated from issuer cells.
+"Sería una sola celda... backups diarios y recuperar en 4h" — **Option 2 architecture accepted,
+operating initially as a single cell**: sessions/cache/pub-sub live in shared services (not
+process memory) so a second cell can be added without redesign. Availability targets:
+**RPO ≤ 24h, RTO ≤ 4h** (daily backups, tested restore). mTLS terminates at the trusted edge;
+issuer cells stay stateless.
+
+## Consequences (of the decision)
+
+- Session/cache/pub-sub become required platform services (cell-scoped, shared-ready).
+- Restore-from-daily-backup drill (RTO ≤ 4h) is part of go-live acceptance.
+- Bridge (SAML, if ever activated per ADR 0003) runs isolated from issuer cells.
 - RPO/RTO and residency recorded here; couples with ADRs 0001 and 0005.

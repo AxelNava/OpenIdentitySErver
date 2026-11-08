@@ -1,7 +1,7 @@
 # ADR 0002: Tenant isolation
 
-Status: Proposed
-Related: plan section 12.2; section 4.8 (multi-issuer and multi-tenancy)
+Status: Accepted (2026-11-08)
+Related: plan section 12.2; section 4.8 (multi-issuer and multi-tenancy); ADR 0009 (tenant-local users)
 
 ## Context
 
@@ -20,7 +20,14 @@ per-tenant database, per-tenant schema, or shared tables with tenant-aware entit
 Option 3 (shared tables + RLS) unless a named tenant contractually requires physical
 isolation, in which case 1 for those tenants only (hybrid).
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
+
+"Si, que sea así hasta que alguien pida aislamiento físico" — **Option 3 accepted**: shared
+tables with a tenant discriminator + RLS, per ADR 0006's per-engine RLS implementations and
+ADR 0009's tenant-local users. Physical (database-per-tenant) isolation is added **only when a
+specific tenant contractually requires it**, as a documented exception.
+
+## Consequences (of the decision)
 
 - Custom OpenIddict entities carry a tenant discriminator; every query path is tenant-scoped.
 - Client-ID uniqueness decided up front (global vs per-tenant-prefixed).
