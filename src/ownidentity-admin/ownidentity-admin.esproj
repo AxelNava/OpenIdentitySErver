@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6311650">
+  <PropertyGroup>
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <ShouldRunBuildScript>true</ShouldRunBuildScript>
+    <StartupCommand>bun run dev</StartupCommand>
+    <BuildCommand>bun run build</BuildCommand>
+    <TestCommand>bun run test:unit -- --run</TestCommand>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+  </PropertyGroup>
+
+  <Target Name="BunInstall" BeforeTargets="CoreCompile;_RunNpmCommandForPublishAssets" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command="bun install --frozen-lockfile --ignore-scripts" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+</Project>

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "legacyTables": [
+    {
+      "name": "Clients",
+      "disposition": "transform"
+    },
+    {
+      "name": "PersistedGrants",
+      "disposition": "drain-or-expire"
+    }
+  ],
+  "customExtensions": [
+    {
+      "name": "LegacyTenantSettings",
+      "disposition": "quarantine-for-review"
+    }
+  ],
+  "credentials": [
+    {
+      "id": "client-credential-metadata-001",
+      "kind": "shared-secret-hash-metadata",
+      "disposition": "re-register"
+    }
+  ],
+  "keys": [
+    {
+      "id": "legacy-signing-key-metadata-001",
+      "purpose": "signing",
+      "disposition": "inventory-public-overlap"
+    },
+    {
+      "id": "legacy-encryption-key-metadata-001",
+      "purpose": "encryption",
+      "disposition": "security-review"
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "sample-interactive-client",
+      "migrationClassification": "authorization-code-pkce",
+      "grantTypes": [
+        "authorization_code"
+      ]
+    },
+    {
+      "clientId": "sample-password-dependent-client",
+      "migrationClassification": "ropc-blocker",
+      "grantTypes": [
+        "password"
+      ],
+      "owner": "sample-application-team",
+      "migrationTarget": "authorization-code-pkce"
+    }
+  ],
+  "customGrants": [
+    {
+      "name": "sample-delegation-grant",
+      "disposition": "quarantine"
+    }
+  ],
+  "adrs": [
+    {
+      "id": "ADR-secret-key-provider",
+      "status": "unresolved",
+      "owner": "platform-security"
+    },
+    {
+      "id": "ADR-database-engine",
+      "status": "unresolved",
+      "owner": "platform-operations"
+    }
+  ]
+}

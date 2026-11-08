@@ -1,0 +1,41 @@
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local persistence and secrets
+**/App_Data/
+*.db
+*.db-shm
+*.db-wal
+*.pfx
+*.snk
+
+# JavaScript
+**/node_modules/
+**/dist/
+**/.vite/
+*.tsbuildinfo
+
+# Aspire and tooling
+.aspire/
+.vs/
+.idea/
+.vscode/
+# Local agent/tool state
+.engram/
+.atl/
+TestResults/
+coverage/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
