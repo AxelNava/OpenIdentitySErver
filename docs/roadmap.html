@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap — Modernización de la plataforma de identidad</title>
+<style>
+  :root {
+    --bg: #0f1420; --bg2: #151b2b; --panel: #1a2236; --panel2: #202a42;
+    --ink: #e8edf7; --ink-dim: #9aa7c1; --line: #2a3552;
+    --accent: #5b9dff; --done: #3ecf8e; --partial: #f5b14d; --pending: #7d8aa8; --deferred: #b06ee0;
+    --risk-crit: #ff6b6b; --risk-high: #f5b14d; --risk-med: #5b9dff;
+    --f1: #5b9dff; --f2: #3ecf8e; --f3: #f5b14d; --f4: #b06ee0; --f5: #4dd4c4; --f6: #e0709a; --f7: #9fbf5a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    display: grid; grid-template-columns: 1fr 400px; grid-template-rows: 56px 1fr 44px;
+    height: 100vh; overflow: hidden;
+  }
+  header { grid-column: 1 / 3; display: flex; align-items: center; gap: 16px; padding: 0 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 15px; font-weight: 600; letter-spacing: .2px; }
+  header .sub { color: var(--ink-dim); font-size: 12px; }
+  .filters { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--line); background: var(--bg2); color: var(--ink-dim);
+    font-size: 11px; padding: 4px 10px; border-radius: 999px; cursor: pointer; user-select: none;
+  }
+  .chip.on { color: #fff; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, var(--bg2)); }
+  .legendbar { grid-column: 1 / 3; display: flex; align-items: center; gap: 14px; padding: 0 20px; background: var(--panel); border-top: 1px solid var(--line); font-size: 11px; color: var(--ink-dim); }
+  .legendbar .k { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+  #viewport { position: relative; overflow: hidden; cursor: grab; background: radial-gradient(1000px 600px at 60% 30%, #131a2c 0%, var(--bg) 70%); }
+  #viewport.grabbing { cursor: grabbing; }
+  #canvas { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+  svg text { font-family: inherit; }
+  .node rect { rx: 10; }
+  .node { cursor: pointer; }
+  .node.dim { opacity: .18; transition: opacity .18s; }
+  .edge { fill: none; stroke: var(--line); stroke-width: 1.6; marker-end: url(#arrow); transition: opacity .18s; }
+  .edge.dim { opacity: .1; }
+  .edge.hot { stroke: var(--accent); stroke-width: 2.2; }
+  aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 20px; }
+  aside h2 { font-size: 16px; margin-bottom: 4px; line-height: 1.3; }
+  aside .meta { display: flex; gap: 6px; margin: 10px 0 14px; flex-wrap: wrap; }
+  .badge { font-size: 10.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-dim); }
+  .badge.done   { color: var(--done);   border-color: color-mix(in srgb, var(--done) 45%, transparent);   background: color-mix(in srgb, var(--done) 12%, transparent); }
+  .badge.partial{ color: var(--partial);border-color: color-mix(in srgb, var(--partial) 45%, transparent);background: color-mix(in srgb, var(--partial) 12%, transparent); }
+  .badge.pending{ color: var(--pending);border-color: color-mix(in srgb, var(--pending) 45%, transparent);background: color-mix(in srgb, var(--pending) 10%, transparent); }
+  .badge.deferred{color: var(--deferred);border-color: color-mix(in srgb, var(--deferred) 45%, transparent);background: color-mix(in srgb, var(--deferred) 12%, transparent); }
+  .badge.risk-crit { color: var(--risk-crit); }
+  .badge.risk-high { color: var(--risk-high); }
+  aside section { margin-bottom: 16px; }
+  aside h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-dim); margin-bottom: 6px; }
+  aside p, aside li { font-size: 13px; line-height: 1.55; color: var(--ink); }
+  aside ul { padding-left: 16px; }
+  aside .hint { color: var(--ink-dim); font-size: 12.5px; }
+  aside a { color: var(--accent); text-decoration: none; }
+  aside a:hover { text-decoration: underline; }
+  .placeholder { color: var(--ink-dim); display: grid; place-content: center; height: 100%; text-align: center; font-size: 13px; line-height: 1.6; padding: 30px; }
+  @media (prefers-reduced-motion: no-preference) { .node, .edge { transition: opacity .18s; } }
+  @media (max-width: 900px) { body { grid-template-columns: 1fr; } aside { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Roadmap — Plataforma de identidad</h1>
+  <span class="sub">unidades 0–19 · dependencias · decisiones ADR cerradas</span>
+  <div class="filters" id="filters"></div>
+</header>
+
+<div id="viewport"><div id="canvas"></div></div>
+
+<aside id="detail">
+  <div class="placeholder">
+    <div>
+      <strong>Roadmap interactivo</strong><br>
+      · arrastra para mover · rueda para zoom ·<br>
+      · clic en una unidad para ver detalle ·<br>
+      · clic en una sección para filtrar ·
+    </div>
+  </div>
+</aside>
+
+<footer class="legendbar">
+  <span class="k"><span class="dot" style="background:var(--done)"></span> completado</span>
+  <span class="k"><span class="dot" style="background:var(--partial)"></span> parcial</span>
+  <span class="k"><span class="dot" style="background:var(--pending)"></span> pendiente</span>
+  <span class="k"><span class="dot" style="background:var(--deferred)"></span> diferido</span>
+  <span class="k" style="margin-left:auto">riesgo: <span class="dot" style="background:var(--risk-crit)"></span> crítico <span class="dot" style="background:var(--risk-high)"></span> alto <span class="dot" style="background:var(--risk-med)"></span> medio</span>
+</footer>
+
+<script>
+const SECTIONS = {
+  done:  { label: "Completado y decisiones", color: "var(--done)" },
+  fund:  { label: "Fundaciones",             color: "var(--f1)" },
+  admin: { label: "Admin y directorio",      color: "var(--f2)" },
+  proto: { label: "Perfiles de protocolo",   color: "var(--f3)" },
+  fed:   { label: "Federación externa",      color: "var(--f4)" },
+  keys:  { label: "Claves",                  color: "var(--f5)" },
+  scale: { label: "Multi-tenant y escala",   color: "var(--f6)" },
+  cut:   { label: "Migración y cutover",     color: "var(--f7)" },
+};
+
+const ADR_FILE = {
+  "0001": "0001-secret-key-provider.md",
+  "0002": "0002-tenant-isolation.md",
+  "0003": "0003-saml-directions-and-product.md",
+  "0004": "0004-compliance-target.md",
+  "0005": "0005-migration-downtime-coexistence.md",
+  "0006": "0006-database-engine.md",
+  "0007": "0007-deployment-topology.md",
+  "0008": "0008-bff-commercial-boundary.md",
+  "0009": "0009-user-namespace.md",
+  "0010": "0010-audit-and-privacy.md",
+};
+
+const UNITS = [
+  { id:"0A", section:"done", status:"done", col:0, title:"Inventario offline + preflight (0A/0B)", deps:[],
+    summary:"Validación offline de manifiesto schema-v1, CLI Unit 0B y endpoint Admin preflight.",
+    gate:"Contrato de manifiesto probado; preflight sin fuente de verdad adicional.", rollback:"Remover slices 0A/0B.", adr:[] },
+  { id:"0C", section:"done", status:"done", col:0, title:"Extractor IS4 + lab Skoruba beta7", deps:["0A"],
+    summary:"CLI operator-run de extracción read-only (stdin-only, TLS obligatorio), gate con dos fingerprints (canónico 4.1.2 y Skoruba Admin 1.0.0-beta7 con 10 tablas Skoruba en cuarentena), lab docker verificado end-to-end y preflight VALID.",
+    gate:"Manifiesto beta7 + preflight Unit 0B VALID, 0 ROPC blockers; 40/40 tests.", rollback:"Borrar tools/ extractor y lab/.", adr:["0003"] },
+  { id:"ADR", section:"done", status:"done", col:0, title:"ADRs 0001–0010 decididos", deps:[],
+    summary:"10 decisiones aceptadas por el operador: Vault OSS diferido con adaptador, RLS por tenant, sin SAML hoy (federación Entra = OIDC 4.4), FAPI 2.0, nuevo issuer blue/green, multi-engine SQL Server+PostgreSQL, celda única (RPO 24h/RTO 4h), BFF OSS, usuarios por tenant, auditoría 7 años.",
+    gate:"docs/adr/README.md: 10/10 Accepted.", rollback:"Reabrir ADR con nueva decisión.", adr:["0001","0002","0003","0004","0005","0006","0007","0008","0009","0010"] },
+  { id:"0", section:"cut", status:"partial", col:1, title:"0 — Inventario legacy (resto)", deps:["0C","ADR"],
+    effort:"M", risk:"Alto",
+    summary:"Dominios de inventario restantes: usuarios/roles/claims, grants activos, providers, key sources, emisor, lifetimes. Cada tabla/extensión/credencial/clave con disposición; cada cliente ROPC como bloqueador con dueño y destino no-ROPC.",
+    gate:"Cada fuente con disposición; ROPC con owner; sin secretos en artefactos.", rollback:"Borrar inventario generado.", adr:["0003"] },
+  { id:"1", section:"fund", status:"pending", col:1, title:"1 — Persistencia de producción + runner de migraciones", deps:["0","ADR"],
+    effort:"L", risk:"Alto",
+    summary:"Motor seleccionable en instalación (SQL Server / PostgreSQL como proyectos separados por proveedor), stores separados control/protocolo/sesión/auditoría, job de migraciones con gate, health/readiness.",
+    gate:"Tests de integración por motor, ensayo backup/restore, migraciones rolling sin carrera de réplicas.", rollback:"Restaurar app/esquema previo dentro del borde compatible probado.", adr:["0006","0002"] },
+  { id:"2", section:"fund", status:"pending", col:1, title:"2 — Issuer fijo y raíces de confianza", deps:["1"],
+    effort:"L", risk:"Crítico",
+    summary:"Issuer explícito, política de Host/forwarded headers, referencias de firma/cifrado vía adaptador de credenciales, baseline cookie/TLS, contrato de proxy.",
+    gate:"Tests de Host desconocido, discovery/JWKS exactos, material de claves ausente de config/logs.", rollback:"Volver a autoridad no-productiva; lanzamiento bloqueado sin claves válidas.", adr:["0001","0007"] },
+  { id:"3", section:"fund", status:"pending", col:2, title:"3 — Fundación de permisos y auditoría", deps:["1","2"],
+    effort:"L", risk:"Crítico",
+    summary:"Permisos finos, scope por tenant (RLS), hooks de step-up, auditoría append-only con retención 7 años, concurrencia optimista, redacción.",
+    gate:"Matriz de autorización y auditoría fail-closed; invariante last-admin; toda mutación auditada redactada.", rollback:"Deshabilitar endpoints de mutación; conservar auditoría.", adr:["0002","0009","0010"] },
+  { id:"4", section:"fund", status:"pending", col:2, title:"4 — Publicación de configuración versionada", deps:["3"],
+    effort:"XL", risk:"Crítico",
+    summary:"Marco draft→validate→diff→approve→publish→outbox→ack→rollback de configuración.",
+    gate:"Ediciones concurrentes, replay/pérdida de eventos, quórum, canary y rollback probados.", rollback:"Republish de revisión compatible previa; data-plane conserva last-known-good.", adr:[] },
+  { id:"5", section:"admin", status:"pending", col:2, title:"5 — Migración Vue a BFF", deps:["2","3"],
+    effort:"L", risk:"Alto",
+    summary:"BFF same-origin, sesiones server-side, proxy YARP con allowlist, CSRF, API relativa; el navegador deja de poseer tokens. YARP + Apache ATM (OSS, ADR 0008).",
+    gate:"Browser prueba cero exposición de tokens; tests cookie/CSRF, refresh concurrente, sesión multi-replica, SSRF.", rollback:"Enrutar temporalmente al client público viejo.", adr:["0008"] },
+  { id:"6", section:"admin", status:"pending", col:3, title:"6 — Ciclo de vida de directorio", deps:["3","5"],
+    effort:"L", risk:"Alto",
+    summary:"Operaciones productivas de usuario/rol/búsqueda/invitación/deshabilitación/MFA/sesiones y pantallas Vue. Usuarios por tenant (ADR 0009): unicidad y sujetos por tenant.",
+    gate:"Compatibilidad de hashes, permisos PII, last-admin, concurrencia, invitación y revocación de sesión.", rollback:"Congelar escrituras, conservar lectura.", adr:["0009"] },
+  { id:"7", section:"proto", status:"pending", col:3, title:"7 — Fundación de perfiles OIDC y permisos", deps:["3","4","5"],
+    effort:"XL", risk:"Crítico",
+    summary:"Esquema de perfiles revisado (tipo de cliente, endpoints, grants/response types, auth de cliente, PKCE/PAR, refresh, scopes/resources/audiences, lifetimes, mTLS como sender-constraint).",
+    gate:"Matriz allow/deny generada; combos inseguros y grants password no asignables; secretos write-only.", rollback:"Republish config previa; deshabilitar clientes nuevos/cambiados.", adr:["0004"] },
+  { id:"8", section:"proto", status:"pending", col:4, title:"8 — Perfil Client Credentials (M2M)", deps:["7","14"],
+    effort:"L", risk:"Alto",
+    summary:"Flujo confidencial, mTLS/private_key_jwt primero, política tipada de scopes/resources/audiences, ciclo de excepción de shared secrets, API protegida de prueba.",
+    gate:"E2E positivo/negativo: sujeto/audience/scope, sin claims de usuario ni refresh por defecto, rechazo de credencial cruzada.", rollback:"Deshabilitar asignaciones M2M y drenar tokens.", adr:["0004"] },
+  { id:"9", section:"proto", status:"pending", col:4, title:"9 — Perfil Device Authorization", deps:["6","7"],
+    effort:"L", risk:"Crítico",
+    summary:"Endpoints device/verification, UI de user-code, binding de consent/sesión, polling/backoff/expiry/rate limits, clientes públicos sin secreto, controles Vue.",
+    gate:"Harness CLI/TV con negativos: phishing, replay, expiry, authorization_pending, slow_down, rate-limit, default-deny.", rollback:"Deshabilitar perfil/endpoint; drenar tokens cortos.", adr:[] },
+  { id:"10", section:"proto", status:"pending", col:3, title:"10 — Cuarentena Hybrid/Implicit", deps:["0","3","4","7"],
+    effort:"L", risk:"Crítico",
+    summary:"Perfiles import-only con ticket/aprobación/activación/expiry/scopes restringidos/warnings/telemetría/destino de migración. Nunca para clientes nuevos.",
+    gate:"Ningún cliente nuevo recibe perfil legacy; front-channel leakage y FAPI-ineligibilidad probadas; ROPC ausente.", rollback:"Deshabilitar cliente/perfil importado; volver a IS4 en su ventana de coexistencia.", adr:["0005"] },
+  { id:"11", section:"fed", status:"pending", col:3, title:"11 — Proveedores upstream OIDC dinámicos", deps:["4","5"],
+    effort:"XL", risk:"Crítico",
+    summary:"Modelo en DB, loader seguro de schemes/options, propagación de cache, wizard/dry-run/drain en Vue. Aquí aterriza la federación con Entra ID / Microsoft de los partners (login con cuenta Microsoft → emitimos nuestros tokens).",
+    gate:"Reload concurrente, convergencia multi-nodo, outage de provider/JWKS, SSRF, callback drain, account-linking.", rollback:"Revertir revisión o enrutar login a provider estático.", adr:["0003"] },
+  { id:"12", section:"fed", status:"deferred", col:4, title:"12 — Piloto SAML inbound", deps:["4","6"],
+    effort:"L", risk:"Crítico",
+    summary:"Diferido (ADR 0003): se activa solo cuando aparezca el primer partner con IdP SAML puro. Default pre-elegido: Sustainsys.Saml2 (inbound).",
+    gate:"Negativos XML/firma/replay/audience + sign-off de un partner en staging.", rollback:"Deshabilitar conexión; enrutar partner a federación legacy.", adr:["0003"] },
+  { id:"13", section:"fed", status:"deferred", col:5, title:"13 — Puente SAML outbound", deps:["12"],
+    effort:"XL", risk:"Crítico",
+    summary:"Diferido (ADR 0003): solo si alguna app propia requiere que seamos IdP SAML de SPs downstream.",
+    gate:"Interoperabilidad, overlap de metadata/certs, SLO/DR, suite negativa.", rollback:"Enrutar SPs de vuelta al IdP legacy.", adr:["0003"] },
+  { id:"14", section:"keys", status:"pending", col:2, title:"14 — Ciclo de vida de claves v1", deps:["2","4"],
+    effort:"XL", risk:"Crítico",
+    summary:"Credenciales estáticas vía adaptador de claves (borde interno ya definido por ADR 0001: software hoy, Vault OSS después sin tocar código de protocolo), descriptores, overlap de JWKS público, alertas de expiry, runbook.",
+    gate:"Validación old/new tokens, fallo de KMS/adapter, sin path de lectura privada, deploy rolling multi-nodo, drill de emergencia.", rollback:"Reactivar clave previa no comprometida; jamás rollback a clave comprometida.", adr:["0001","0007"] },
+  { id:"15", section:"keys", status:"pending", col:4, title:"15 — Automatización de claves", deps:["14"],
+    effort:"XL", risk:"Crítico",
+    summary:"Scheduler generate/prepublish/activate/retire con aprobaciones, reload atómico o controlador rolling, probes de propagación. (Integración Vault OSS como unidad futura sobre este adaptador.)",
+    gate:"Rotación acelerada repetida + chaos, horizonte de cache de consumidores, kid duplicado, activación parcial.", rollback:"Pausar automatización y operar ciclo manual v1.", adr:["0001"] },
+  { id:"16", section:"scale", status:"pending", col:4, title:"16 — Segunda celda de issuer y aislamiento", deps:["2","3","4","14"],
+    effort:"XL", risk:"Crítico",
+    summary:"Celda única hoy (ADR 0007) con estado compartido (sesión/cache/pub-sub) listo para crecer; template de celda, routing confiable, aislamiento tenant de datos/keys/cache. RLS por motor (ADR 0002/0006).",
+    gate:"Suite negativa cross-tenant, host/SNI/forwarded headers, backup/restore y noisy-neighbor.", rollback:"Quitar ruta del edge; conservar DB/keys de la celda hasta drenar.", adr:["0002","0006","0007"] },
+  { id:"17", section:"proto", status:"pending", col:5, title:"17 — Perfil interactivo FAPI 2.0 mTLS", deps:["7","14","16"],
+    effort:"XL", risk:"Crítico",
+    summary:"Authorization code + PAR autenticado, S256-only, mTLS-bound tokens, algoritmos aprobados, API protegida de prueba. Objetivo de compliance: FAPI 2.0 Final (ADR 0004).",
+    gate:"Negativos internos + suite OIDF FAPI 2 AS/RS; Hybrid/Implicit inelegibles; todo request password rechazado.", rollback:"Deshabilitar clientes del perfil y restaurar revisión previa.", adr:["0004"] },
+  { id:"18", section:"cut", status:"pending", col:5, title:"18 — ETL y coexistencia", deps:["0","6","7","8","9","10"],
+    effort:"XL", risk:"Crítico",
+    summary:"Manifiesto canónico, loaders idempotentes, mapeos explícitos por perfil, evidencia read-only de ROPC, reconciliación fila a fila, validación dual-issuer de APIs, dashboard de olas.",
+    gate:"Ensayos a escala productiva, contratos de hash/flow por cliente, cero drift no explicado, re-registro de credenciales completo.", rollback:"Re-correr desde snapshot previo a escrituras; enrutar ola de vuelta durante validación dual.", adr:["0005"] },
+  { id:"19", section:"cut", status:"pending", col:6, title:"19 — Cutover de producción y decomisionado", deps:["17","18","15"],
+    effort:"L", risk:"Crítico",
+    summary:"Sync final/freeze, switch de edge/DNS, monitoreo, drenaje de grants/sesiones, sunset de perfiles legacy, archivo y destrucción. Nuevo issuer blue/green (ADR 0005): re-autenticación tolerada.",
+    gate:"Go/no-go con evidencia, drill de rollback, error budget verde, cero ROPC sin resolver, password grant globalmente ausente, sign-off de dueños.", rollback:"Borde por-issuer de sección 5; jamás swap improvisado de DB.", adr:["0005","0007"] },
+];
+
+// ---- layout ----
+const W = 300, H = 96, GAPX = 90, GAPY = 30, MARGIN = 60;
+const cols = {};
+UNITS.forEach(u => { cols[u.col] = (cols[u.col] || 0) + 1; });
+const colCount = {};
+const nodes = {};
+UNITS.forEach(u => {
+  colCount[u.col] = (colCount[u.col] || 0);
+  const idx = colCount[u.col]++;
+  u.x = MARGIN + u.col * (W + GAPX);
+  u.y = MARGIN + idx * (H + GAPY) + (u.col % 2) * 14;
+  nodes[u.id] = u;
+});
+const graphW = MARGIN * 2 + Math.max(...UNITS.map(u => u.col)) * (W + GAPX) + W;
+const graphH = MARGIN * 2 + Math.max(...Object.values(cols)) * (H + GAPY);
+
+// ---- render ----
+const canvas = document.getElementById("canvas");
+const NS = "http://www.w3.org/2000/svg";
+const el = (name, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, name);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+
+const svg = el("svg", { width: graphW, height: graphH, viewBox: `0 0 ${graphW} ${graphH}` });
+canvas.appendChild(svg);
+const defs = el("defs", {}, svg);
+const marker = el("marker", { id: "arrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+el("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "var(--line)" }, marker);
+
+// edges under nodes
+const edgeLayer = el("g", {}, svg);
+const edges = [];
+UNITS.forEach(u => (u.deps || []).forEach(depId => {
+  const d = nodes[depId];
+  if (!d) return;
+  const x1 = d.x + W, y1 = d.y + H / 2, x2 = u.x, y2 = u.y + H / 2;
+  const mx = (x1 + x2) / 2;
+  const p = el("path", { class: "edge", d: `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}` }, edgeLayer);
+  edges.push({ from: depId, to: u.id, el: p });
+}));
+
+// nodes
+const nodeLayer = el("g", {}, svg);
+UNITS.forEach(u => {
+  const g = el("g", { class: "node", "data-id": u.id }, nodeLayer);
+  const s = SECTIONS[u.section];
+  el("rect", { x: u.x, y: u.y, width: W, height: H, fill: "var(--panel2)", stroke: s.color, "stroke-width": 1.6 }, g);
+  el("rect", { x: u.x, y: u.y, width: 5, height: H, fill: s.color }, g);
+  // status dot
+  const statusColor = { done: "var(--done)", partial: "var(--partial)", pending: "var(--pending)", deferred: "var(--deferred)" }[u.status];
+  el("circle", { cx: u.x + W - 14, cy: u.y + 15, r: 5, fill: statusColor }, g);
+  // id + effort/risk
+  const t1 = el("text", { x: u.x + 16, y: u.y + 20, fill: s.color, "font-size": 11, "font-weight": 700, "letter-spacing": .5 }, g);
+  t1.textContent = u.id;
+  const t2 = el("text", { x: u.x + W - 26, y: u.y + 20, fill: "var(--ink-dim)", "font-size": 10, "text-anchor": "end" }, g);
+  t2.textContent = `${u.effort || ""}`;
+  // title wrapped
+  const words = u.title.split(" ");
+  const lines = [];
+  let line = "";
+  words.forEach(w => {
+    if ((line + " " + w).trim().length > 34) { lines.push(line.trim()); line = w; }
+    else line += " " + w;
+  });
+  if (line.trim()) lines.push(line.trim());
+  lines.slice(0, 3).forEach((l, i) => {
+    const t = el("text", { x: u.x + 16, y: u.y + 42 + i * 17, fill: "var(--ink)", "font-size": 12.5, "font-weight": 600 }, g);
+    t.textContent = l;
+  });
+  g.addEventListener("click", e => { e.stopPropagation(); show(u.id); });
+});
+
+// ---- interaction ----
+const viewport = document.getElementById("viewport");
+let tx = 30, ty = 30, scale = 1;
+function apply() { canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`; }
+apply();
+viewport.addEventListener("wheel", e => {
+  e.preventDefault();
+  const r = viewport.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  const k = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+  const ns = Math.min(2.2, Math.max(0.35, scale * k));
+  tx = mx - (mx - tx) * (ns / scale);
+  ty = my - (my - ty) * (ns / scale);
+  scale = ns; apply();
+}, { passive: false });
+let drag = null;
+viewport.addEventListener("pointerdown", e => { drag = { x: e.clientX - tx, y: e.clientY - ty }; viewport.classList.add("grabbing"); });
+window.addEventListener("pointermove", e => { if (drag) { tx = e.clientX - drag.x; ty = e.clientY - drag.y; apply(); } });
+window.addEventListener("pointerup", () => { drag = null; viewport.classList.remove("grabbing"); });
+
+const aside = document.getElementById("aside") || document.querySelector("aside");
+function show(id) {
+  const u = nodes[id]; if (!u) return;
+  const riskClass = /Crítico/i.test(u.risk || "") ? "risk-crit" : "risk-high";
+  const s = SECTIONS[u.section];
+  const statusLabel = { done: "completado", partial: "parcial", pending: "pendiente", deferred: "diferido" }[u.status];
+  aside.innerHTML = `
+    <h2>${u.title}</h2>
+    <div class="meta">
+      <span class="badge ${u.status}">${statusLabel}</span>
+      <span class="badge" style="color:${s.color};border-color:${s.color}">${s.label}</span>
+      ${u.risk ? `<span class="badge ${riskClass}">riesgo ${u.risk.toLowerCase()}</span>` : ""}
+      ${u.effort ? `<span class="badge">esfuerzo ${u.effort.toLowerCase()}</span>` : ""}
+    </div>
+    <section><h3>Qué es</h3><p>${u.summary}</p></section>
+    ${(u.deps || []).length ? `<section><h3>Depende de</h3><ul>${u.deps.map(d => `<li><a href="#" data-goto="${d}">${d} — ${(nodes[d] || {}).title || d}</a></li>`).join("")}</ul></section>` : ""}
+    <section><h3>Puerta de aceptación</h3><p>${u.gate}</p></section>
+    <section><h3>Rollback</h3><p>${u.rollback}</p></section>
+    ${(u.adr || []).length ? `<section><h3>ADRs</h3><p>${u.adr.map(a => { const f = ADR_FILE[a]; return f ? `<a href="adr/${f}">ADR ${a}</a>` : `ADR ${a}`; }).join(" · ")}</p></section>` : ""}
+  `;
+  aside.querySelectorAll("[data-goto]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); show(a.dataset.goto); focusNode(a.dataset.goto); }));
+  highlight(id);
+}
+
+function highlight(id) {
+  const related = new Set([id]);
+  UNITS.forEach(u => { if ((u.deps || []).includes(id)) related.add(u.id); });
+  (nodes[id].deps || []).forEach(d => related.add(d));
+  edges.forEach(e => {
+    const on = e.from === id || e.to === id;
+    e.el.classList.toggle("hot", on);
+    e.el.classList.toggle("dim", !on);
+  });
+  document.querySelectorAll(".node").forEach(n => n.classList.toggle("dim", !related.has(n.dataset.id)));
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
+}
+function clearHighlight() {
+  edges.forEach(e => { e.el.classList.remove("hot"); e.el.classList.remove("dim"); });
+  document.querySelectorAll(".node").forEach(n => n.classList.remove("dim"));
+}
+function focusNode(id) {
+  const u = nodes[id]; if (!u) return;
+  const r = viewport.getBoundingClientRect();
+  tx = r.width / 2 - (u.x + W / 2) * scale;
+  ty = r.height / 2 - (u.y + H / 2) * scale;
+  apply();
+}
+viewport.addEventListener("click", e => { if (e.target === viewport || e.target === canvas || e.target === svg) { clearHighlight(); } });
+
+// section filters
+const filters = document.getElementById("filters");
+Object.entries(SECTIONS).forEach(([key, s]) => {
+  const c = document.createElement("span");
+  c.className = "chip"; c.textContent = s.label; c.style.setProperty("--c", s.color);
+  c.addEventListener("click", () => {
+    const on = c.classList.toggle("on");
+    const anyOn = document.querySelectorAll(".chip.on").length > 0;
+    document.querySelectorAll(".node").forEach(n => {
+      const u = nodes[n.dataset.id];
+      n.classList.toggle("dim", anyOn && u.section !== key);
+    });
+    edges.forEach(e => {
+      const uf = nodes[e.from], ut = nodes[e.to];
+      e.el.classList.toggle("dim", anyOn && uf.section !== key && ut.section !== key);
+    });
+  });
+  filters.appendChild(c);
+});
+</script>
+</body>
+</html>
