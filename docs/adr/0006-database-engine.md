@@ -1,6 +1,6 @@
 # ADR 0006: Database engine
 
-Status: Proposed
+Status: Accepted (2026-11-08, adjusted by operator)
 Related: plan section 12.6; section 4.8/ADR 0002 (RLS dependency); section 8 (test strategy)
 
 ## Context
@@ -20,8 +20,25 @@ collation/case behavior, retention.
 Option 1 (PostgreSQL) for RLS + cost, unless the operator runs SQL Server estates already
 (in which case 2 keeps the migration lab representative).
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
 
-- EF migrations owned by the platform repo; RLS policies versioned and tested.
-- Collation/case behavior (client_id, scope names) pinned in tests.
-- The lab's SQL Server remains a legacy-source stand-in; it does not constrain this choice.
+"Hoy SQL Server, pero al igual que identity server, lo vamos a hacer compatible con postgre..."
+— **Multi-engine by design**: SQL Server first (matches the operator's current estate and the
+lab), PostgreSQL supported in parallel. Implementation strategy:
+
+- The data model (entities, migrations intent, policies) lives engine-agnostic in a core
+  project; **separate library projects per provider** (e.g. `OwnIdentity.Data.SqlServer`,
+  `OwnIdentity.Data.PostgreSQL`) own their EF provider specifics.
+- The **template installer selects the engine** before deployment; the chosen provider project
+  is wired in, the other is not referenced.
+- SQLite remains local-development only (standing plan constraint).
+- Both engines support Row-Level Security; RLS policies are provider-specific implementations
+  of one shared policy definition (feeds ADR 0002).
+- Collation/case behavior differs between engines (client_id, scope names): tests must pin
+  behavior per engine.
+
+## Consequences (of the decision)
+
+- EF migrations owned by the provider projects; RLS policies versioned and tested per engine.
+- Collation/case behavior (client_id, scope names) pinned in tests per engine.
+- The lab's SQL Server stays representative of the primary target engine.

@@ -1,6 +1,6 @@
 # ADR 0008: BFF commercial boundary
 
-Status: Proposed
+Status: Accepted (2026-11-08)
 Related: plan section 12.8; section 4.9 (Vue administration BFF with YARP)
 
 ## Context
@@ -19,7 +19,12 @@ Option 1 unless the operator values Duende's support contract; OSS stack already
 own-repo policy (`src/ownidentity-admin/bunfig.toml` lifecycle-script policy stands independent
 of this choice).
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
+
+"Sin soporte comercial, usamos OSS" — **Option 1 accepted**: OSS YARP + Apache Access Token
+Management + custom glue. No commercial license; support is the project's own.
+
+## Consequences (of the decision)
 
 - Custom glue code owns CSRF, session refresh concurrency, and proxy allowlisting (plan
   section 6 test matrix).

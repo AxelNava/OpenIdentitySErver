@@ -1,6 +1,6 @@
 # ADR 0004: Compliance target
 
-Status: Proposed
+Status: Accepted (2026-11-08)
 Related: plan section 12.4; section 4.6 (financial-grade security and FAPI)
 
 ## Context
@@ -21,7 +21,12 @@ certification profile: FAPI 2.0 Final, FAPI 1.0 Advanced, or a named ecosystem p
 Option 1, unless a regulator requires 2 or 3. Certification evidence effort is deferred until
 operator/regulator demand exists.
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
+
+"No de momento, mantenemos FAPI" — **FAPI 2.0 Security Profile Final** accepted. DPoP stays
+excluded per the standing plan decision (section 11); reopening requires a new product decision.
+
+## Consequences (of the decision)
 
 - Conformance suite runs become the acceptance bar for flow policy changes (plan section 8).
 - Message signing / response-mode requirements come from the profile, not ad hoc.

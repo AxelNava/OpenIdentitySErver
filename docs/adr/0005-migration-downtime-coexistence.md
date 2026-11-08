@@ -1,6 +1,6 @@
 # ADR 0005: Migration downtime/coexistence
 
-Status: Proposed
+Status: Accepted (2026-11-08, adjusted by operator)
 Related: plan section 12.5; section 5 (IdentityServer4 to OpenIddict migration)
 
 ## Context
@@ -23,8 +23,17 @@ Option 2 (same issuer, side-by-side with write freeze) when user reauthenticatio
 unacceptable; option 1 when it is acceptable (simpler, safer). Decide after sizing the active
 grant population from the legacy database inventory.
 
-## Consequences (if adopted)
+## Decision (operator, 2026-11-08)
 
-- A reverse journal and rollback-duration budget are mandatory pre-cutover artifacts.
-- DNS/edge ownership named per ADR 0007.
-- Key material continuity (same issuer) implies shared JWKS strategy with ADR 0001.
+"Si es tolerable re autenticar" — user reauthentication is acceptable → **Option 1: new issuer,
+blue/green**. Target runs under a new issuer with clean configuration; the legacy authority
+stays side-by-side only to redeem/drain its own grants; rollback is re-pointing the edge.
+
+## Consequences (of the decision)
+
+- APIs temporarily trust an explicit allowlist of old and new issuers/audiences (plan section 5.6).
+- No shared signing-key continuity work is needed (unlike same-issuer strategies).
+- Cutover acceptance: zero unresolved ROPC dependencies, then maximum old grant/token/session
+  lifetimes, contractual rollback period, and audit retention gates.
+- The reverse-journal requirement of same-issuer strategies does not apply; database snapshots
+  remain sufficient until directory writes move (plan section 5 rollback boundaries).
