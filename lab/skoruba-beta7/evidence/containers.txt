@@ -1,0 +1,4 @@
+is4beta7-admin: Up 50 seconds 0.0.0.0:19000->9000/tcp, [::]:19000->9000/tcp
+is4beta7-sts: Up 3 minutes 0.0.0.0:15000->5000/tcp, [::]:15000->5000/tcp
+is4beta7-api: Up 3 minutes 0.0.0.0:15002->5002/tcp, [::]:15002->5002/tcp
+is4beta7-mssql: Up 11 minutes (healthy) 0.0.0.0:14330->1433/tcp, [::]:14330->1433/tcp

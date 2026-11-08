@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "legacyTables": [
+    {
+      "name": "ApiClaims",
+      "disposition": "transform"
+    },
+    {
+      "name": "ApiProperties",
+      "disposition": "transform"
+    },
+    {
+      "name": "ApiResources",
+      "disposition": "transform"
+    },
+    {
+      "name": "ApiScopeClaims",
+      "disposition": "transform"
+    },
+    {
+      "name": "ApiScopes",
+      "disposition": "transform"
+    },
+    {
+      "name": "ApiSecrets",
+      "disposition": "re-register"
+    },
+    {
+      "name": "ClientClaims",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientCorsOrigins",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientGrantTypes",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientIdPRestrictions",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientPostLogoutRedirectUris",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientProperties",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientRedirectUris",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientScopes",
+      "disposition": "transform"
+    },
+    {
+      "name": "ClientSecrets",
+      "disposition": "re-register"
+    },
+    {
+      "name": "Clients",
+      "disposition": "transform"
+    },
+    {
+      "name": "IdentityClaims",
+      "disposition": "transform"
+    },
+    {
+      "name": "IdentityProperties",
+      "disposition": "transform"
+    },
+    {
+      "name": "IdentityResources",
+      "disposition": "transform"
+    }
+  ],
+  "customExtensions": [
+    {
+      "name": "DeviceCodes",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "Log",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "PersistedGrants",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "RoleClaims",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "Roles",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "UserClaims",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "UserLogins",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "UserRoles",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "UserTokens",
+      "disposition": "quarantine"
+    },
+    {
+      "name": "Users",
+      "disposition": "quarantine"
+    }
+  ],
+  "credentials": [
+    {
+      "id": "client-credential-1",
+      "kind": "shared-secret-hash-metadata",
+      "disposition": "re-register"
+    }
+  ],
+  "keys": [],
+  "clients": [
+    {
+      "clientId": "skoruba_identity_admin",
+      "migrationClassification": "hybrid-legacy",
+      "grantTypes": [
+        "hybrid"
+      ]
+    }
+  ],
+  "customGrants": [],
+  "adrs": [
+    {
+      "id": "ADR-source-extraction-operator-cli",
+      "status": "resolved"
+    },
+    {
+      "id": "ADR-source-baseline-skoruba-identityserver4-admin-1.0.0-beta7",
+      "status": "resolved"
+    }
+  ]
+}

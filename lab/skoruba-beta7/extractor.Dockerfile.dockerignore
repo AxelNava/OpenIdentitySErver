@@ -1,0 +1,4 @@
+*
+!src/OwnIdentity.LegacyInventory.Core
+!tools/OwnIdentity.IdentityServer4Extractor
+!lab/skoruba-beta7/certs/ca.crt
