@@ -7,7 +7,8 @@ internal interface IIdentityServer4ConfigurationSource
 
 internal sealed record IdentityServer4SourceSnapshot(
     IReadOnlyList<SourceClient> Clients,
-    IReadOnlyList<SourceCredential> Credentials);
+    IReadOnlyList<SourceCredential> Credentials,
+    SchemaBaselineMatch? Baseline = null);
 
 internal sealed record SourceClient(
     int Id,

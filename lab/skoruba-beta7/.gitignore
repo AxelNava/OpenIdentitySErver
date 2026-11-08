@@ -1,0 +1,5 @@
+src/
+certs/*.key
+certs/*.crt
+certs/*.csr
+*.srl

@@ -1,0 +1,4 @@
+20190619072343_AspNetIdentityDbInit 2.2.6-servicing-10079
+20190619072401_LoggingDbInit 2.2.6-servicing-10079
+20190619072418_IdentityServerConfigurationDbInit 2.2.6-servicing-10079
+20190619072435_IdentityServerPersistedGrantsDbInit 2.2.6-servicing-10079

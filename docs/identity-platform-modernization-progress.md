@@ -9,7 +9,7 @@ This ledger is the durable resume point for implementation of the [identity plat
 | Unit 0: Legacy inventory and ADR closure | **IN PROGRESS** | The validation contract exists, but real source evidence, owner assignments, and ADR decisions remain outstanding. |
 | Unit 0A: Legacy inventory manifest validator and ROPC blocker gate | **COMPLETE** | Offline CLI, typed manifest validation, samples, focused tests, and runtime checks pass. |
 | Unit 0B: User-initiated stateless IdentityServer4 manifest preflight | **COMPLETE** | Authorized API boundary, sanitized Vue upload journey, bounded safe response, extraction to package-free Core, tests, build, CLI regression, and unauthenticated runtime policy smoke pass. |
-| Unit 0C: Source-side SQL Server/IdentityServer4 EF 4.1 extractor | **COMPLETE** | Independent operator CLI, exact schema fingerprint, stdin-only credential boundary, fixed read-only metadata projections, sanitized schema-v1 output, and behavior tests pass. Live SQL Server execution remains unavailable. |
+| Unit 0C: Source-side SQL Server/IdentityServer4 EF 4.1 extractor | **COMPLETE** | Independent operator CLI, exact schema fingerprint extended to the Skoruba Admin 1.0.0-beta7 variant (quarantined extension evidence), stdin-only credential boundary, fixed read-only metadata projections, sanitized schema-v1 output, and behavior tests pass. Live SQL Server execution proven against the docker Skoruba beta7 lab (TLS-validated, stdin-only credential); production live execution remains an operator run. |
 
 ## Plan alignment
 
@@ -187,10 +187,17 @@ Get-Secret -Name "<approved-reference>" -AsPlainText |
 
 Delete `tools/OwnIdentity.IdentityServer4Extractor` and `tests/OwnIdentity.IdentityService.Tests/IdentityServer4SourceExtractorTests.cs`; remove the extractor from `OwnIdentity_openDict.sln` and its test project reference through .NET CLI; remove the Unit 0C plan/progress sections and current-status row. Unit 0A Core/CLI, Unit 0B API/Vue behavior, IdentityService packages/runtime/schema/data, frontend dependencies, and source/target databases are unaffected. No extracted artifact is created automatically; operators separately delete any explicitly redirected manifest according to evidence-retention policy.
 
+## Unit 0C Skoruba beta7 lab evidence
+
+- Lab: `lab/skoruba-beta7/` — docker compose (SQL Server 2017 with TLS cert + Skoruba Admin/Api/STS built from tag `1.0.0-beta7`, all non-default ports: 14330/19000/15000/15002), seeded one client (`skoruba_identity_admin`, hybrid) after deleting the seed's swagger-ui client, schema evidence in `lab/skoruba-beta7/evidence/` (30 tables, 188 columns, 4 migrations @ EF 2.2.6).
+- Extraction run: `is4beta7-extractor` image (repo-built, lab CA trusted) executed with the connection string exclusively on stdin inside the lab network; exit 0, sanitized schema-v1 manifest with beta7 fingerprint, 19 config tables, 10 quarantined Skoruba extension tables, ADR `ADR-source-baseline-skoruba-identityserver4-admin-1.0.0-beta7`.
+- Preflight (Unit 0B): `OwnIdentity.LegacyInventory lab/skoruba-beta7/lab-manifest.json` → status VALID, 0 ROPC blockers.
+- Database compatibility baseline decision: the port target schema is Skoruba IdentityServer4.Admin 1.0.0-beta7 (user decision L2 in `odd/tasks/is4-rc2-source-lab.md`); IS4 runtime remains 2.4.0-era and clients/grants migrate through the plan section-5 mapping table, not by copying rows.
+
 ## Unit 0C known limitations
 
-- No authorized live SQL Server/IdentityServer4 EF 4.1 database was available, so real connectivity, metadata visibility, TLS chain, SQL permissions, collation behavior, and representative scale remain unproven.
-- The gate accepts only a dedicated canonical `dbo` configuration database. Shared databases, custom migration history, renamed schemas/tables, added tables/columns, Skoruba, and other variants intentionally fail closed.
+- No production authorized live SQL Server/IdentityServer4 EF 4.1 database was available; connectivity, TLS chain validation, and the full read-only pipeline were proven against the isolated Skoruba 1.0.0-beta7 docker lab (see above). Real operator runs still require the approved secret provider, short-lived least-privilege principal, and protected output path.
+- The gate accepts only a dedicated canonical `dbo` configuration database or the Skoruba Admin 1.0.0-beta7 variant (whose Skoruba identity/log/operational tables are recorded as quarantined evidence, never inventoried as source truth). Shared databases beyond that, custom migration histories, renamed schemas/tables, and other variants intentionally fail closed.
 - The database fingerprint proves the canonical 4.1 configuration schema, not the exact deployed IdentityServer4 assembly patch or surrounding deployment configuration.
 - Schema v1 cannot represent resource/scope detail, redirect URIs, providers, ASP.NET Identity rows, deployment/issuer/key-source evidence, operational counts, or full ADR state. Later bounded contracts must add those domains without weakening redaction.
 - Standard input avoids common persistence/disclosure surfaces but leaves plaintext in process memory and the OS pipe. The external secret provider, host isolation, process supervision, SQL principal lifecycle, and protected redirected output remain operator responsibilities.

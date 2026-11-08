@@ -1,0 +1,123 @@
+name: is4-skoruba-beta7-lab
+
+# Legacy lab: Skoruba IdentityServer4.Admin 1.0.0-beta7 (source build, no official image for this tag)
+# against SQL Server, single database `IdentityServer4Admin`. All ports are non-default on purpose.
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: is4beta7-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Lab#Password123"
+      MSSQL_PID: Developer
+    volumes:
+      - mssqldata:/var/opt/mssql
+      - ./certs:/certs:ro
+    # TLS cert so the extractor's Encrypt=Mandatory/TrustServerCertificate=false boundary can validate.
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /opt/mssql/bin/mssql-conf -n set network.tlscert /certs/mssql.pem
+        /opt/mssql/bin/mssql-conf -n set network.tlskey /certs/mssql.key
+        /opt/mssql/bin/mssql-conf -n set network.tlsprotocols 1.2
+        /opt/mssql/bin/sqlservr
+    ports:
+      - "14330:1433"
+    healthcheck:
+      # TCP probe only: sqlcmd's ODBC handshake rejects the lab cert even unencrypted.
+      # The seed/extractor connections below prove real connectivity.
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/localhost/1433 && echo ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  # One-shot semantics handled by the boot script: /seed migrates + seeds, then the
+  # boot script stops this container (the app would otherwise keep listening).
+  seed:
+    build:
+      context: ./src
+      dockerfile: ../Dockerfile
+      args:
+        APP_NAME: Skoruba.IdentityServer4.Admin
+    image: is4beta7-skoruba-admin
+    container_name: is4beta7-seed
+    command: ["/seed"]
+    environment: &lab-env
+      ASPNETCORE_URLS: http://+:9000
+      ConnectionStrings__ConfigurationDbConnection: "Server=mssql;Database=IdentityServer4Admin;User Id=sa;Password=Lab#Password123;MultipleActiveResultSets=true"
+      ConnectionStrings__PersistedGrantDbConnection: "Server=mssql;Database=IdentityServer4Admin;User Id=sa;Password=Lab#Password123;MultipleActiveResultSets=true"
+      ConnectionStrings__IdentityDbConnection: "Server=mssql;Database=IdentityServer4Admin;User Id=sa;Password=Lab#Password123;MultipleActiveResultSets=true"
+      ConnectionStrings__AdminLogDbConnection: "Server=mssql;Database=IdentityServer4Admin;User Id=sa;Password=Lab#Password123;MultipleActiveResultSets=true"
+      AdminConfiguration__IdentityAdminBaseUrl: http://localhost:19000
+      AdminConfiguration__IdentityAdminRedirectUri: http://localhost:19000/signin-oidc
+      # Host LAN IP so the Authority URL works from BOTH the admin container and the host browser
+      # (host.docker.internal does not resolve on the host). If the host IP changes, update this line.
+      AdminConfiguration__IdentityServerBaseUrl: http://192.168.0.60:15000
+      AdminConfiguration__IdentityAdminApiSwaggerUIRedirectUrl: http://localhost:15002/swagger/oauth2-redirect.html
+      Serilog__MinimumLevel__Default: Information
+    depends_on:
+      mssql:
+        condition: service_healthy
+    restart: "no"
+
+  # Runs the OwnIdentity extractor inside the lab network with the lab CA trusted,
+  # preserving the stdin-only credential boundary. Connection string arrives on stdin.
+  extractor:
+    build:
+      context: ../..
+      dockerfile: lab/skoruba-beta7/extractor.Dockerfile
+    image: is4beta7-extractor
+    container_name: is4beta7-extractor
+    depends_on:
+      mssql:
+        condition: service_healthy
+    stdin_open: true
+    restart: "no"
+
+
+  admin:
+    image: is4beta7-skoruba-admin
+    container_name: is4beta7-admin
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment: *lab-env
+    ports:
+      - "19000:9000"
+
+  api:
+    build:
+      context: ./src
+      dockerfile: ../Dockerfile
+      args:
+        APP_NAME: Skoruba.IdentityServer4.Admin.Api
+    image: is4beta7-skoruba-api
+    container_name: is4beta7-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      <<: *lab-env
+      ASPNETCORE_URLS: http://+:5002
+    ports:
+      - "15002:5002"
+
+  sts:
+    build:
+      context: ./src
+      dockerfile: ../Dockerfile
+      args:
+        APP_NAME: Skoruba.IdentityServer4.STS.Identity
+    image: is4beta7-skoruba-sts
+    container_name: is4beta7-sts
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      <<: *lab-env
+      ASPNETCORE_URLS: http://+:5000
+    ports:
+      - "15000:5000"
+
+volumes:
+  mssqldata:
