@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using OwnIdentity.Data.Core.Entities;
 using OwnIdentity.IdentityService.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 

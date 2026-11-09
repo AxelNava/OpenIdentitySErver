@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
+using OwnIdentity.Data.Core.Entities;
 using OwnIdentity.IdentityService.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 

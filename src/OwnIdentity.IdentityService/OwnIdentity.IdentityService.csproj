@@ -13,7 +13,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
     <PackageReference Include="OpenIddict.AspNetCore" Version="7.6.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.6.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.12" />
@@ -21,6 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OwnIdentity.LegacyInventory.Core\OwnIdentity.LegacyInventory.Core.csproj" />
+    <ProjectReference Include="..\OwnIdentity.Data.Core\OwnIdentity.Data.Core.csproj" />
+    <ProjectReference Include="..\OwnIdentity.Data.SqlServer\OwnIdentity.Data.SqlServer.csproj" />
+    <ProjectReference Include="..\OwnIdentity.Data.PostgreSQL\OwnIdentity.Data.PostgreSQL.csproj" />
+    <ProjectReference Include="..\OwnIdentity.Data.Sqlite\OwnIdentity.Data.Sqlite.csproj" />
   </ItemGroup>
 
 </Project>

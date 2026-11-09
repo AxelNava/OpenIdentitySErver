@@ -1,23 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OwnIdentity.Data.Core;
+using OwnIdentity.Data.Core.Entities;
 using OwnIdentity.IdentityService.Data;
 using OwnIdentity.IdentityService.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("IdentityDatabase");
-if (string.IsNullOrWhiteSpace(connectionString))
-{
-    var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-    Directory.CreateDirectory(dataDirectory);
-    connectionString = $"Data Source={Path.Combine(dataDirectory, "identity.db")}";
-}
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlite(connectionString);
-    options.UseOpenIddict();
-});
+builder.Services.AddOwnIdentityDataStores(builder.Configuration, builder.Environment);
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -27,7 +17,7 @@ builder.Services
         options.Password.RequiredLength = 12;
         options.Password.RequireNonAlphanumeric = true;
     })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddEntityFrameworkStores<ControlDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -44,7 +34,7 @@ builder.Services.AddOpenIddict()
     .AddCore(options =>
     {
         options.UseEntityFrameworkCore()
-            .UseDbContext<ApplicationDbContext>();
+            .UseDbContext<ProtocolDbContext>();
     })
     .AddServer(options =>
     {
@@ -88,7 +78,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddProblemDetails();
-builder.Services.AddHealthChecks();
+// Readiness reflects migration-complete state (S3/S4); liveness is unchanged.
+builder.Services.AddHealthChecks()
+    .AddCheck<MigrationReadinessCheck>("migrations");
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<DatabaseSeeder>();
@@ -121,11 +113,20 @@ app.MapHealthChecks("/health/ready");
 app.MapControllers();
 app.MapRazorPages();
 
-await using (var scope = app.Services.CreateAsyncScope())
+if (!EF.IsDesignTime)
 {
-    var database = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    await database.Database.MigrateAsync();
-    await scope.ServiceProvider.GetRequiredService<DatabaseSeeder>().SeedAsync();
+    var storeOptions = app.Services.GetRequiredService<OwnIdentityDataStoreOptions>();
+    await using (var scope = app.Services.CreateAsyncScope())
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            // Development convenience only: inline migrate/ensure per store (S4 keeps
+            // startup replicas in non-Development from ever racing migrations).
+            await DevelopmentDatabaseInitializer.InitializeAsync(app.Services, storeOptions);
+        }
+
+        await scope.ServiceProvider.GetRequiredService<DatabaseSeeder>().SeedAsync();
+    }
 }
 
 await app.RunAsync();

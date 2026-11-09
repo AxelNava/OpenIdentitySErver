@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\tools\OwnIdentity.LegacyInventory\OwnIdentity.LegacyInventory.csproj" />
     <ProjectReference Include="..\..\src\OwnIdentity.LegacyInventory.Core\OwnIdentity.LegacyInventory.Core.csproj" />
     <ProjectReference Include="..\..\tools\OwnIdentity.IdentityServer4Extractor\OwnIdentity.IdentityServer4Extractor.csproj" />
+    <ProjectReference Include="..\..\tools\OwnIdentity.DataMigrationRunner\OwnIdentity.DataMigrationRunner.csproj" />
   </ItemGroup>
 
 </Project>
