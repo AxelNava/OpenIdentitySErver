@@ -1,0 +1,145 @@
+# Unit 1 package gate (S6) — captured 2026-11-09T02:36:57Z
+
+== dotnet restore OwnIdentity_openDict.sln ==
+  Determinando los proyectos que se van a restaurar...
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tools/OwnIdentity.DataMigrationRunner/OwnIdentity.DataMigrationRunner.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tools/OwnIdentity.IdentityServer4Extractor/OwnIdentity.IdentityServer4Extractor.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.13 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/IdentityProjectsHost/IdentityProjectsHost.csproj : warning NU1902: El paquete "MessagePack" 2.5.302 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tools/OwnIdentity.DataMigrationRunner/OwnIdentity.DataMigrationRunner.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tools/OwnIdentity.IdentityServer4Extractor/OwnIdentity.IdentityServer4Extractor.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.13 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 10.0.10 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 10.0.10 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj : warning NU1903: El paquete "System.Security.Cryptography.Xml" 10.0.10 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-7hqp-7c5m-4vq6 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj : warning NU1903: El paquete "System.Security.Cryptography.Xml" 10.0.10 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-c399-9853-6jmj [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj : warning NU1903: El paquete "System.Security.Cryptography.Xml" 10.0.10 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-r955-8q5j-3h83 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/OwnIdentity_openDict.sln]
+  Se ha restaurado /home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.Sqlite/OwnIdentity.Data.Sqlite.csproj (en 378 ms).
+  Se ha restaurado /home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/tests/OwnIdentity.IdentityService.Tests/OwnIdentity.IdentityService.Tests.csproj (en 395 ms).
+  Se ha restaurado /home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj (en 424 ms).
+  8 de 11 proyectos están actualizados para la restauración.
+
+== dotnet list src/OwnIdentity.IdentityService package --include-transitive ==
+  Determinando los proyectos que se van a restaurar...
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj]
+  Todos los proyectos están actualizados para la restauración.
+El proyecto "OwnIdentity.IdentityService" tiene las referencias de paquete siguientes
+   [net10.0]: 
+   Paquete de nivel superior                                Solicitado   Resuelto
+   > Microsoft.AspNetCore.Identity.EntityFrameworkCore      10.0.7       10.0.7  
+   > Microsoft.EntityFrameworkCore.Design                   10.0.7       10.0.7  
+   > OpenIddict.AspNetCore                                  7.6.0        7.6.0   
+   > OpenIddict.EntityFrameworkCore                         7.6.0        7.6.0   
+   > SQLitePCLRaw.bundle_e_sqlite3                          2.1.12       2.1.12  
+
+   Paquete transitivo                                             Resuelto
+   > Azure.Core                                                   1.47.1  
+   > Azure.Identity                                               1.14.2  
+   > Humanizer.Core                                               2.14.1  
+   > Microsoft.Bcl.AsyncInterfaces                                8.0.0   
+   > Microsoft.Bcl.Cryptography                                   10.0.2  
+   > Microsoft.Build.Framework                                    18.0.2  
+   > Microsoft.CodeAnalysis.Analyzers                             3.11.0  
+   > Microsoft.CodeAnalysis.Common                                5.0.0   
+   > Microsoft.CodeAnalysis.CSharp                                5.0.0   
+   > Microsoft.CodeAnalysis.CSharp.Workspaces                     5.0.0   
+   > Microsoft.CodeAnalysis.Workspaces.Common                     5.0.0   
+   > Microsoft.CodeAnalysis.Workspaces.MSBuild                    5.0.0   
+   > Microsoft.Data.SqlClient                                     6.1.1   
+   > Microsoft.Data.SqlClient.SNI.runtime                         6.0.2   
+   > Microsoft.Data.Sqlite.Core                                   10.0.7  
+   > Microsoft.EntityFrameworkCore                                10.0.10 
+   > Microsoft.EntityFrameworkCore.Abstractions                   10.0.10 
+   > Microsoft.EntityFrameworkCore.Analyzers                      10.0.10 
+   > Microsoft.EntityFrameworkCore.Relational                     10.0.10 
+   > Microsoft.EntityFrameworkCore.Sqlite                         10.0.7  
+   > Microsoft.EntityFrameworkCore.Sqlite.Core                    10.0.7  
+   > Microsoft.EntityFrameworkCore.SqlServer                      10.0.7  
+   > Microsoft.Extensions.AmbientMetadata.Application             10.8.0  
+   > Microsoft.Extensions.Compliance.Abstractions                 10.8.0  
+   > Microsoft.Extensions.DependencyInjection.AutoActivation      10.8.0  
+   > Microsoft.Extensions.DependencyModel                         10.0.7  
+   > Microsoft.Extensions.Diagnostics.ExceptionSummarization      10.8.0  
+   > Microsoft.Extensions.Http.Diagnostics                        10.8.0  
+   > Microsoft.Extensions.Http.Polly                              10.0.10 
+   > Microsoft.Extensions.Http.Resilience                         10.8.0  
+   > Microsoft.Extensions.Resilience                              10.8.0  
+   > Microsoft.Extensions.Telemetry                               10.8.0  
+   > Microsoft.Extensions.Telemetry.Abstractions                  10.8.0  
+   > Microsoft.Identity.Client                                    4.73.1  
+   > Microsoft.Identity.Client.Extensions.Msal                    4.73.1  
+   > Microsoft.IdentityModel.Abstractions                         8.19.2  
+   > Microsoft.IdentityModel.JsonWebTokens                        8.19.2  
+   > Microsoft.IdentityModel.Logging                              8.19.2  
+   > Microsoft.IdentityModel.Protocols                            8.19.2  
+   > Microsoft.IdentityModel.Protocols.OpenIdConnect              7.7.1   
+   > Microsoft.IdentityModel.Tokens                               8.19.2  
+   > Microsoft.SqlServer.Server                                   1.0.0   
+   > Microsoft.VisualStudio.SolutionPersistence                   1.0.52  
+   > Mono.TextTemplating                                          3.0.0   
+   > Newtonsoft.Json                                              13.0.3  
+   > Npgsql                                                       10.0.3  
+   > Npgsql.EntityFrameworkCore.PostgreSQL                        10.0.3  
+   > OpenIddict                                                   7.6.0   
+   > OpenIddict.Abstractions                                      7.6.0   
+   > OpenIddict.Client                                            7.6.0   
+   > OpenIddict.Client.AspNetCore                                 7.6.0   
+   > OpenIddict.Client.DataProtection                             7.6.0   
+   > OpenIddict.Client.SystemIntegration                          7.6.0   
+   > OpenIddict.Client.SystemNetHttp                              7.6.0   
+   > OpenIddict.Client.WebIntegration                             7.6.0   
+   > OpenIddict.Core                                              7.6.0   
+   > OpenIddict.EntityFrameworkCore.Models                        7.6.0   
+   > OpenIddict.Server                                            7.6.0   
+   > OpenIddict.Server.AspNetCore                                 7.6.0   
+   > OpenIddict.Server.DataProtection                             7.6.0   
+   > OpenIddict.Validation                                        7.6.0   
+   > OpenIddict.Validation.AspNetCore                             7.6.0   
+   > OpenIddict.Validation.DataProtection                         7.6.0   
+   > OpenIddict.Validation.ServerIntegration                      7.6.0   
+   > OpenIddict.Validation.SystemNetHttp                          7.6.0   
+   > Polly                                                        7.2.4   
+   > Polly.Core                                                   8.4.2   
+   > Polly.Extensions                                             8.4.2   
+   > Polly.Extensions.Http                                        3.0.0   
+   > Polly.RateLimiting                                           8.4.2   
+   > SQLitePCLRaw.core                                            2.1.12  
+   > SQLitePCLRaw.lib.e_sqlite3                                   2.1.12  
+   > SQLitePCLRaw.provider.e_sqlite3                              2.1.12  
+   > System.ClientModel                                           1.5.1   
+   > System.CodeDom                                               6.0.0   
+   > System.Composition                                           9.0.0   
+   > System.Composition.AttributedModel                           9.0.0   
+   > System.Composition.Convention                                9.0.0   
+   > System.Composition.Hosting                                   9.0.0   
+   > System.Composition.Runtime                                   9.0.0   
+   > System.Composition.TypedParts                                9.0.0   
+   > System.Configuration.ConfigurationManager                    9.0.4   
+   > System.IdentityModel.Tokens.Jwt                              7.7.1   
+   > System.Memory.Data                                           8.0.1   
+   > System.Security.Cryptography.Pkcs                            9.0.4   
+   > System.Security.Cryptography.ProtectedData                   9.0.4   
+
+
+== dotnet list src/OwnIdentity.IdentityService package --vulnerable --include-transitive ==
+  Determinando los proyectos que se van a restaurar...
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7 [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1902: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-2fmv-rv2c-59x7
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.Data.SqlServer/OwnIdentity.Data.SqlServer.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx [/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj]
+/home/axelnav/Documentos/proyectos-c#/OpenIdentitySErver/src/OwnIdentity.IdentityService/OwnIdentity.IdentityService.csproj : warning NU1903: El paquete "System.Security.Cryptography.Pkcs" 9.0.4 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-846f-f764-76mx
+  Todos los proyectos están actualizados para la restauración.
+
+Se han usado los orígenes siguientes:
+   https://api.nuget.org/v3/index.json
+
+El proyecto "OwnIdentity.IdentityService" tiene los paquetes vulnerables siguientes
+   [net10.0]: 
+   Paquete transitivo                       Resuelto   Gravedad   Dirección URL de asesoría                        
+   > System.Security.Cryptography.Pkcs      9.0.4      High       https://github.com/advisories/GHSA-846f-f764-76mx
+                                                       Moderate   https://github.com/advisories/GHSA-2fmv-rv2c-59x7
+
